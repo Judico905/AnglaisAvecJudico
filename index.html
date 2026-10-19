@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>30 phrases d’anglais à connaître | Anglais avec Judico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f5f9;--card:#fff;--ink:#14213d;--mute:#5b6577;--line:#dde2ec;--acc:#2f5bea;--accink:#fff;--soft:#e8eeff}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1626;--card:#18223a;--ink:#eef2fb;--mute:#a3adc2;--line:#2a3654;--acc:#7b9bff;--accink:#0f1626;--soft:#222f52}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Lexend,system-ui,sans-serif;line-height:1.5;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+.wrap{max-width:720px;margin:0 auto;padding:0 18px 48px}
+header{display:flex;justify-content:space-between;align-items:center;padding:16px 0;gap:12px}
+.brand{font-weight:800;font-size:1rem}
+a.btn,button.btn{background:var(--acc);color:var(--accink);border:0;border-radius:999px;padding:10px 18px;font:600 .9rem Lexend,sans-serif;text-decoration:none;cursor:pointer;display:inline-block}
+h1{font-size:clamp(1.9rem,6vw,2.8rem);line-height:1.1;margin:18px 0 6px;font-weight:800;max-width:14ch}
+.sub{color:var(--mute);margin:0 0 20px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--card)}
+.seg button{border:0;background:none;color:var(--mute);padding:8px 14px;font:600 .85rem Lexend,sans-serif;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--acc);color:var(--accink)}
+ol{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+li{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;transition:border-color .2s}
+li.on{border-color:var(--acc);box-shadow:0 0 0 2px var(--soft)}
+.row{display:flex;align-items:center;gap:12px}
+.play{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:var(--soft);color:var(--acc);font-size:1rem;cursor:pointer}
+.txt{flex:1;text-align:left;background:none;border:0;color:var(--ink);font:600 1.05rem/1.35 Lexend,sans-serif;cursor:pointer;padding:6px 0}
+.more{display:none;margin:8px 0 2px 56px;color:var(--mute);font-size:.95rem}
+.more b{color:var(--ink)}
+li.open .more{display:block}
+.slow{background:none;border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:4px 12px;font:600 .8rem Lexend,sans-serif;cursor:pointer;margin-top:6px}
+button:focus-visible,a:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.cta{margin-top:30px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;text-align:center}
+.cta p{margin:0 0 14px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <span class="brand">Anglais avec Judico</span>
+  <a class="btn" id="subTop" target="_blank" rel="noopener"></a>
+</header>
+<h1 id="h1"></h1>
+<p class="sub" id="sub"></p>
+<div class="bar">
+  <div class="seg" role="group" aria-label="Langue"><button data-l="fr" aria-pressed="true">FR</button><button data-l="en" aria-pressed="false">EN</button></div>
+  <div class="seg" role="group" aria-label="Accent"><button data-a="en-GB" aria-pressed="true">UK</button><button data-a="en-US" aria-pressed="false">US</button></div>
+  <button class="btn" id="all"></button>
+</div>
+<ol id="list"></ol>
+<section class="cta">
+  <p id="ctaTxt"></p>
+  <a class="btn" id="subBot" target="_blank" rel="noopener"></a>
+</section>
+</div>
+<script>
+/* ===== À MODIFIER CHAQUE SEMAINE ===== */
+const WEEK = 1;
+const CHANNEL = "https://www.youtube.com/@judico905?sub_confirmation=1";
+const AUDIO_BASE = "";  // ex : "audio/" pour lire audio/01.mp3 … audio/30.mp3 (vide = voix du navigateur)
+const FULL_AUDIO = "";  // ex : "audio/all.mp3" (vide = lecture enchaînée des 30 phrases)
+// [anglais, traduction, note FR, note EN]
+const S = [
+["How’s it going?","Ça va ?","Salutation informelle. Réponse courante : « Good, you? »","Informal greeting. Common reply: “Good, you?”"],
+["Nice to meet you.","Enchanté(e).","À dire à la première rencontre.","Said when you meet someone for the first time."],
+["Could you repeat that, please?","Pouvez-vous répéter, s’il vous plaît ?","« Could you » est plus poli que « Can you ».","“Could you” is more polite than “Can you”."],
+["I didn’t catch that.","Je n’ai pas saisi ce que tu as dit.","« Catch » = comprendre à l’oral. Très naturel.","“Catch” means to hear and understand. Very natural."],
+["Could you speak more slowly?","Peux-tu parler plus lentement ?","On dit aussi « Could you slow down? »","You can also say “Could you slow down?”"],
+["What does this mean?","Qu’est-ce que ça veut dire ?","Pour demander le sens d’un mot ou d’une phrase.","To ask the meaning of a word or sentence."],
+["How do you say this in English?","Comment dit-on ça en anglais ?","Utile quand il te manque un mot.","Useful when you are missing a word."],
+["I’m not sure.","Je ne suis pas sûr(e).","Exprime un doute sans bloquer la conversation.","Shows doubt without stopping the conversation."],
+["I’m learning English.","J’apprends l’anglais.","Présent continu : l’action est en cours.","Present continuous: the action is ongoing."],
+["Can I ask you something?","Je peux te demander quelque chose ?","Introduit une question en douceur.","A gentle way to introduce a question."],
+["Let me think.","Laisse-moi réfléchir.","Gagne du temps sans rester silencieux.","Buys you time without staying silent."],
+["That makes sense.","Ça se tient.","Veut dire « je comprends ta logique ».","Means “I understand your logic”."],
+["I’m looking for…","Je cherche…","Ex : « I’m looking for a pharmacy. »","Example: “I’m looking for a pharmacy.”"],
+["How much is it?","Ça coûte combien ?","Pour demander un prix.","Used to ask a price."],
+["Can I have the bill, please?","L’addition, s’il vous plaît.","« Bill » en anglais britannique, « check » en américain.","“Bill” in British English, “check” in American."],
+["I’d like a coffee, please.","Je voudrais un café, s’il vous plaît.","« I’d like » est plus poli que « I want ».","“I’d like” is more polite than “I want”."],
+["Where is the station?","Où est la gare ?","Remplace « station » par un autre lieu.","Replace “station” with any other place."],
+["I’m running late.","Je suis en retard.","Tu es en chemin et tu arrives après l’heure prévue.","You are on the way and will arrive after the planned time."],
+["See you later.","À plus tard.","À dire en partant, même sans heure précise.","Said when leaving, even without a set time."],
+["Take care.","Prends soin de toi.","Une façon chaleureuse de dire au revoir.","A warm way to say goodbye."],
+["I’m on my way.","Je suis en route.","Pour dire que tu arrives.","To say you are coming."],
+["It depends.","Ça dépend.","Ajoute « on… » pour préciser : « It depends on the price. »","Add “on…” to explain: “It depends on the price.”"],
+["Actually, I disagree.","En fait, je ne suis pas d’accord.","Faux-ami : « actually » = « en fait », pas « actuellement ».","False friend: “actually” means “en fait”, not “actuellement”."],
+["I’m used to it.","J’y suis habitué(e).","« Be used to + nom » = être habitué. Différent de « I used to ».","“Be used to + noun” = be accustomed. Different from “I used to”."],
+["I’m looking forward to it.","J’ai hâte.","Après « to », mets un nom ou un verbe en -ing.","After “to”, use a noun or a verb in -ing."],
+["Never mind.","Laisse tomber.","Pour dire que ce n’est pas important.","Means it is not important."],
+["I’m fed up.","J’en ai marre.","Familier. Tu peux ajouter « with » : « fed up with this ».","Informal. You can add “with”: “fed up with this”."],
+["No worries.","Pas de souci.","Réponse courante après « Thanks » ou « Sorry ».","A common reply after “Thanks” or “Sorry”."],
+["I’ll get back to you.","Je reviens vers toi.","Très utilisé au travail pour promettre une réponse.","Very common at work to promise an answer."],
+["Thanks a lot, it really helps.","Merci beaucoup, ça m’aide vraiment.","« Really » renforce le sens et sonne sincère.","“Really” adds emphasis and sounds sincere."]
+];
+/* ===== FIN ===== */
+const T={fr:{h1:"30 phrases à connaître",sub:n=>"Semaine "+n+" · Clique sur une phrase pour l’explication",all:"▶ Tout écouter",stop:"■ Arrêter",slow:"🐢 Plus lent",sub1:"S’abonner",cta:"Une nouvelle liste chaque semaine. Abonne-toi pour ne rien rater et pose tes questions en commentaire.",sub2:"S’abonner sur YouTube"},
+en:{h1:"30 phrases to know",sub:n=>"Week "+n+" · Tap a sentence for the explanation",all:"▶ Play all",stop:"■ Stop",slow:"🐢 Slower",sub1:"Subscribe",cta:"A new list every week. Subscribe so you never miss one, and ask your questions in the comments.",sub2:"Subscribe on YouTube"}};
+let lang="fr",acc="en-GB",playing=false,cur=null;
+const $=id=>document.getElementById(id),list=$("list");
+function pad(i){return String(i+1).padStart(2,"0")}
+function render(){
+  const t=T[lang];document.documentElement.lang=lang;
+  $("h1").textContent=t.h1;$("sub").textContent=t.sub(WEEK);$("ctaTxt").textContent=t.cta;
+  $("subTop").textContent=t.sub1;$("subTop").href=CHANNEL;$("subBot").textContent=t.sub2;$("subBot").href=CHANNEL;
+  $("all").textContent=playing?t.stop:t.all;
+  const open=[...list.children].map(l=>l.classList.contains("open"));
+  list.innerHTML="";
+  S.forEach((s,i)=>{
+    const li=document.createElement("li");li.id="s"+i;if(open[i])li.classList.add("open");
+    li.innerHTML='<div class="row"><button class="play" aria-label="Play">▶</button><button class="txt"></button></div><div class="more"><b></b><br><span></span><br><button class="slow"></button></div>';
+    li.querySelector(".txt").textContent=s[0];
+    li.querySelector("b").textContent=s[1];
+    li.querySelector("span").textContent=lang==="fr"?s[2]:s[3];
+    li.querySelector(".slow").textContent=t.slow;
+    li.querySelector(".play").onclick=()=>{halt();playItem(i,false)};
+    li.querySelector(".slow").onclick=()=>{halt();playItem(i,true)};
+    li.querySelector(".txt").onclick=()=>li.classList.toggle("open");
+    list.appendChild(li);
+  });
+}
+function mark(i){[...list.children].forEach((l,k)=>l.classList.toggle("on",k===i))}
+function halt(){playing=false;speechSynthesis.cancel();if(cur){cur.pause();cur=null}mark(-1);$("all").textContent=T[lang].all}
+function say(text,slow,done){
+  const u=new SpeechSynthesisUtterance(text.replace(/’/g,"'"));
+  u.lang=acc;u.rate=slow?.7:.95;
+  const v=speechSynthesis.getVoices().find(x=>x.lang.replace("_","-")===acc);if(v)u.voice=v;
+  u.onend=done;speechSynthesis.speak(u);
+}
+function playItem(i,slow,done){
+  mark(i);const end=()=>{mark(-1);if(done)done()};
+  if(AUDIO_BASE){
+    cur=new Audio(AUDIO_BASE+pad(i)+".mp3");cur.playbackRate=slow?.75:1;cur.onended=end;
+    cur.onerror=()=>{cur=null;say(S[i][0],slow,end)};cur.play().catch(()=>{});
+  }else say(S[i][0],slow,end);
+}
+function seq(i){if(!playing||i>=S.length)return halt();playItem(i,false,()=>seq(i+1))}
+$("all").onclick=()=>{
+  if(playing)return halt();
+  playing=true;$("all").textContent=T[lang].stop;
+  if(FULL_AUDIO){cur=new Audio(FULL_AUDIO);cur.onended=halt;cur.play().catch(halt)}else seq(0);
+};
+document.querySelectorAll("[data-l]").forEach(b=>b.onclick=()=>{lang=b.dataset.l;document.querySelectorAll("[data-l]").forEach(x=>x.setAttribute("aria-pressed",x===b));render()});
+document.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>{acc=b.dataset.a;document.querySelectorAll("[data-a]").forEach(x=>x.setAttribute("aria-pressed",x===b))});
+render();
+</script>
+</body>
+</html>
